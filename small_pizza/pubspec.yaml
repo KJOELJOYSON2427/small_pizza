@@ -51,6 +51,8 @@ dependencies:
   google_sign_in: ^6.2.1
   flutter_facebook_auth: ^7.0.1
 
+  image_picker: ^1.2.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
