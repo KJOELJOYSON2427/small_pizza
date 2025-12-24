@@ -9,6 +9,7 @@ import 'package:small_pizza/features/auth/presentation/bloc/register/register_bl
 import 'package:small_pizza/features/auth/presentation/pages/login_page.dart';
 import 'package:small_pizza/features/auth/presentation/pages/regiater_pages.dart';
 import 'package:small_pizza/features/auth/presentation/pages/splash_pages.dart';
+import 'package:small_pizza/features/onboarding/presentation/pages/onboarding_pages.dart';
 import 'package:small_pizza/features/welcome/presentation/pages/welcome_page.dart';
 // 🔹 TEMP pages (we’ll replace with real ones later)
 // class SplashPage extends StatelessWidget {
@@ -66,7 +67,7 @@ class AppRoutes {
       GoRoute(path: '/splash', builder: (context, state) => const SplashPage()),
       GoRoute(
         path: '/welcome',
-        builder: (context, state) => const WelcomePage(),
+        builder: (context, state) =>  const OnboardingPage(),
       ),
 
       GoRoute(
