@@ -52,6 +52,7 @@ dependencies:
   flutter_facebook_auth: ^7.0.1
   flutter_dotenv: ^6.0.0
   image_picker: ^1.2.1
+  shared_preferences: ^2.5.3
 
 dev_dependencies:
   flutter_test:
