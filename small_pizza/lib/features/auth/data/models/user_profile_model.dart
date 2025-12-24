@@ -11,18 +11,23 @@ class UserProfileModel extends UserProfileEntity {
     required super.updatedAt,
   });
 
+
   factory UserProfileModel.fromJson(Map<String, dynamic> json) {
     return UserProfileModel(
-      uid: json['uid'],
-      name: json['name'],
+      uid: json['uid'] ?? '',
+      name: json['name'] ?? '',
       photoUrl: json['photoUrl'],
       mobile: json['mobile'],
       address: json['address'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
+          : DateTime.now(),
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.parse(json['updatedAt'])
+          : DateTime.now(),
     );
   }
-
+  
   Map<String, dynamic> toJson() {
     return {
       'uid': uid,
@@ -33,5 +38,26 @@ class UserProfileModel extends UserProfileEntity {
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
     };
+  }
+
+  
+  UserProfileModel copyWith({
+    String? uid,
+    String? name,
+    String? photoUrl,
+    String? mobile,
+    String? address,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return UserProfileModel(
+      uid: uid ?? this.uid,
+      name: name ?? this.name,
+      photoUrl: photoUrl ?? this.photoUrl,
+      mobile: mobile ?? this.mobile,
+      address: address ?? this.address,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
   }
 }
