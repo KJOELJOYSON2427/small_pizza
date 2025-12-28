@@ -1,0 +1,12 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+part 'navigation_event.dart';
+part 'navigation_state.dart';
+
+class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
+  NavigationBloc() : super(const NavigationState(2)) {
+    on<TabChanged>((event, emit) {
+      emit(NavigationState(event.index));
+    });
+  }
+}
