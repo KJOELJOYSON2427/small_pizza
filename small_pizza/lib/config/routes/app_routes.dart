@@ -11,7 +11,6 @@ import 'package:small_pizza/features/auth/presentation/pages/regiater_pages.dart
 import 'package:small_pizza/features/auth/presentation/pages/splash_pages.dart';
 import 'package:small_pizza/features/onboarding/presentation/pages/onboarding_pages.dart';
 import 'package:small_pizza/features/shell/presentation/pages/app_shell_page.dart';
-import 'package:small_pizza/features/welcome/presentation/pages/welcome_page.dart';
 // 🔹 TEMP pages (we’ll replace with real ones later)
 // class SplashPage extends StatelessWidget {
 //   const SplashPage({super.key});
@@ -37,22 +36,38 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class FoodDetailPage extends StatelessWidget {
-  const FoodDetailPage({super.key});
+class MenuPage extends StatelessWidget {
+  const MenuPage({super.key});
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: Text("Food Detail")));
+    return const Scaffold(body: Center(child: Text("Menu Detail")));
   }
 }
 
-class CartPage extends StatelessWidget {
-  const CartPage({super.key});
+class OffersPage extends StatelessWidget {
+  const OffersPage({super.key});
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: Text("Cart")));
+    return const Scaffold(body: Center(child: Text("Offers")));
   }
 }
 
+
+class MorePage extends StatelessWidget {
+  const MorePage({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(body: Center(child: Text("More")));
+  }
+}
+
+class ProfilePage extends StatelessWidget {
+  const ProfilePage({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(body: Center(child: Text("Offers")));
+  }
+}
 class CheckoutPage extends StatelessWidget {
   const CheckoutPage({super.key});
   @override
@@ -62,15 +77,22 @@ class CheckoutPage extends StatelessWidget {
 }
 
 class AppRoutes {
+  /// Root navigator key
+  static final _rootNavigatorKey = GlobalKey<NavigatorState>();
   static final GoRouter router = GoRouter(
-    initialLocation: '/splash',
+    navigatorKey: _rootNavigatorKey,
+    initialLocation: '/home',
     routes: [
       GoRoute(path: '/splash', builder: (context, state) => const SplashPage()),
       GoRoute(
-        path: '/welcome',
+        path: '/onboarding',
         builder: (context, state) => const OnboardingPage(),
       ),
 
+      // GoRoute(
+      //   path: '/welcome',
+      //   builder: (context, state) => const OnboardingPage(),
+      // ),
       GoRoute(
         path: '/login',
         builder: (context, state) => BlocProvider(
@@ -91,60 +113,81 @@ class AppRoutes {
         },
       ),
 
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return AppShellPage(navigationShell: navigationShell);
+        },
+        branches: <StatefulShellBranch>[
 
+        
+// Branch 1 → Menu (left side)
+        StatefulShellBranch(
+          navigatorKey: GlobalKey<NavigatorState>(debugLabel: 'menuNavKey'),
+          routes: [
+            GoRoute(
+              path: '/menu',
+              pageBuilder: (context, state) => const NoTransitionPage(
+                child: MenuPage(), // ← replace later
+              ),
+            ),
+          ],
+        ),
 
-    //  StatefulShellRoute.indexedStack(
-    //     builder:(context, state, navigationShell){
+        // Branch 2 → Offers
+        StatefulShellBranch(
+          navigatorKey: GlobalKey<NavigatorState>(debugLabel: 'offersNavKey'),
+          routes: [
+            GoRoute(
+              path: '/offers',
+              pageBuilder: (context, state) => const NoTransitionPage(
+                child: OffersPage(), // ← replace later
+              ),
+            ),
+          ],
+        ),
+    // Menu
+          StatefulShellBranch(
+            navigatorKey: GlobalKey<NavigatorState>(debugLabel: 'homeNavKey'),
+            initialLocation: '/home',
+            routes: [
+              GoRoute(
+              path: '/home',
+              pageBuilder: (context, state) => const NoTransitionPage(
+                child: HomePage(),
+              ),
+            ),
+            // You can later add nested routes here, e.g. /home/details/:id
+          ],
+          ),
+        // Branch 3 → Profile
+        StatefulShellBranch(
+          navigatorKey: GlobalKey<NavigatorState>(debugLabel: 'profileNavKey'),
+          routes: [
+            GoRoute(
+              path: '/profile',
+              pageBuilder: (context, state) => const NoTransitionPage(
+                child: ProfilePage(), // ← replace later
+              ),
+            ),
+          ],
+        ),
 
-    //     },
-    //     branches: <StatefulShellBranch>[
-    //       // Home
-    //       StatefulShellBranch(
-    //         routes: [
-    //           GoRoute(path: '/home',
-    //            pageBuilder: (context, state) => const NoTransitionPage(child: HomePage()),
-    //           )
-    //         ]
-    //       ),
-    //        // Offers
-    //       StatefulShellBranch(
-    //         routes: [
-    //           GoRoute(
-    //             path: '/offers',
-    //             pageBuilder: (context, state) =>
-    //                 const NoTransitionPage(child: HomePage()),
-    //           ),
-    //         ],
-    //       ),
-
-    //       // Profile
-    //       StatefulShellBranch(
-    //         routes: [
-    //           GoRoute(
-    //             path: '/profile',
-    //             pageBuilder: (context, state) =>
-    //                 const NoTransitionPage(child: HomePage()),
-    //           ),
-    //         ],
-    //       ),
-
-    //       // More
-    //       StatefulShellBranch(
-    //         routes: [
-    //           GoRoute(
-    //             path: '/more',
-    //             pageBuilder: (context, state) =>
-    //                 const NoTransitionPage(child: HomePage()),
-    //           ),
-    //         ],
-    //       ),
-    //     ]
-    //  )
-
-
-
-
-
+        // Branch 4 → More
+        StatefulShellBranch(
+          navigatorKey: GlobalKey<NavigatorState>(debugLabel: 'moreNavKey'),
+          routes: [
+            GoRoute(
+              path: '/more',
+              pageBuilder: (context, state) => const NoTransitionPage(
+                child: MorePage(), // ← replace later
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+          
+       
 
       /// 🏠 App Shell
       // ShellRoute(
