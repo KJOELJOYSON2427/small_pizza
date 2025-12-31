@@ -9,6 +9,7 @@ import 'package:small_pizza/features/auth/presentation/bloc/register/register_bl
 import 'package:small_pizza/features/auth/presentation/pages/login_page.dart';
 import 'package:small_pizza/features/auth/presentation/pages/regiater_pages.dart';
 import 'package:small_pizza/features/auth/presentation/pages/splash_pages.dart';
+import 'package:small_pizza/features/home/presentation/pages/home_view.dart';
 import 'package:small_pizza/features/onboarding/presentation/pages/onboarding_pages.dart';
 import 'package:small_pizza/features/shell/presentation/pages/app_shell_page.dart';
 // 🔹 TEMP pages (we’ll replace with real ones later)
@@ -28,13 +29,7 @@ import 'package:small_pizza/features/shell/presentation/pages/app_shell_page.dar
 //   }
 // }
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text("Home"));
-  }
-}
+
 
 class MenuPage extends StatelessWidget {
   const MenuPage({super.key});
@@ -153,7 +148,7 @@ class AppRoutes {
               GoRoute(
               path: '/home',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: HomePage(),
+                child: HomeView(),
               ),
             ),
             // You can later add nested routes here, e.g. /home/details/:id

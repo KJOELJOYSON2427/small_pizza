@@ -14,28 +14,42 @@ class AppShellPage extends StatelessWidget {
     final isHomeActive = navigationShell.currentIndex == 2;
 
     return Scaffold(
-      body: navigationShell,
+      body: Padding(padding: const EdgeInsets.all(4.0), child: navigationShell),
       extendBody: true,
       extendBodyBehindAppBar: true, // ← optional: cleaner look on scroll
       backgroundColor: Colors.grey.shade50, // ← light background recommended
       bottomNavigationBar: BottomNavBar(navigationShell: navigationShell),
-      floatingActionButton: FloatingActionButton.large(
-        backgroundColor: isHomeActive
-            ? AppTheme.primaryColor
-            : Colors.grey.shade300,
-        foregroundColor: AppTheme.lightSurface,
-        elevation: isHomeActive ? 10 : 4,
-        highlightElevation: isHomeActive ? 14 : 8,
-        shape: const CircleBorder(),
-       
-        onPressed: () => navigationShell.goBranch(2, initialLocation: true),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Image.asset(
-            'assets/img/tab_home.png',
-            width: isHomeActive ? 52 : 32,
-            height: isHomeActive ? 52 : 32,
-            color: Colors.white,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Transform.scale(
+          scale: isHomeActive
+              ? 1.25
+              : 1.0, // ← 1.25–1.4 feels very prominent without being huge
+          child: FloatingActionButton(
+            backgroundColor: isHomeActive
+                ? AppTheme.primaryColor
+                : Colors.grey.shade300,
+        
+            foregroundColor: AppTheme.lightSurface,
+        
+            elevation: isHomeActive ? 10 : 4,
+            highlightElevation: isHomeActive ? 14 : 6,
+        
+            shape: const CircleBorder(),
+        
+            child: Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: Image.asset(
+                'assets/img/tab_home.png',
+                width: isHomeActive
+                    ? 24
+                    : 20, // icon still scales a bit, but circle grows more
+                height: isHomeActive ? 24 : 20,
+                color: Colors.white,
+              ),
+            ),
+        
+            onPressed: () => navigationShell.goBranch(2, initialLocation: true),
           ),
         ),
       ),

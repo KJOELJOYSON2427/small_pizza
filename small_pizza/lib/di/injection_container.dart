@@ -32,6 +32,16 @@ import 'package:small_pizza/features/auth/presentation/bloc/login_bloc.dart';
 import 'package:small_pizza/features/auth/presentation/bloc/register/register_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:small_pizza/features/auth/presentation/bloc/splash/splash_bloc.dart';
+import 'package:small_pizza/features/food/data/datasorces/food_mock_datasource.dart';
+import 'package:small_pizza/features/food/data/datasorces/food_mock_datasource_impl.dart';
+import 'package:small_pizza/features/food/data/repositories/food_repository_impl.dart';
+import 'package:small_pizza/features/food/domain/repositories/food_repository.dart';
+import 'package:small_pizza/features/home/presentation/bloc/home_header/home_header_bloc.dart';
+import 'package:small_pizza/features/restaurent/data/datasorces/restaurant_mock_datasource.dart';
+import 'package:small_pizza/features/restaurent/data/datasorces/restaurant_mock_datasource_impl.dart';
+import 'package:small_pizza/features/restaurent/data/repositories/restaurant_repository_impl.dart';
+import 'package:small_pizza/features/restaurent/domain/repositories/restaurant_repository.dart';
+import 'package:small_pizza/features/restaurent/domain/usecases/get_home_restaurants_usecase.dart';
 
 final sl = GetIt.instance;
 Future<void> init() async {
@@ -54,7 +64,11 @@ Future<void> init() async {
   sl.registerLazySingleton<CloudinaryRemoteDataSource>(
     () => CloudinaryRemoteDataSourceImpl(sl<CloudinaryPublic>()),
   );
+  sl.registerLazySingleton<RestaurantDataSource>(
+    () => RestaurantMockDataSource(),
+  );
 
+  sl.registerLazySingleton<FoodMockDataSource>(() => FoodMockDatasourceImpl());
   // ── 2. Data Sources ───────────────────────────────────────────
   sl.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(
@@ -76,6 +90,13 @@ Future<void> init() async {
   sl.registerLazySingleton<CloudinaryRepository>(
     () => CloudinaryRepositoryImpl(sl<CloudinaryRemoteDataSource>()),
   );
+  sl.registerLazySingleton<RestaurantRepository>(
+    () => RestaurantRepositoryImpl(sl<RestaurantDataSource>()),
+  );
+
+  sl.registerLazySingleton<FoodRepository>(
+    () => FoodRepositoryImpl(sl<FoodMockDataSource>()),
+  );
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(sl<AuthRemoteDataSource>()),
   );
@@ -92,7 +113,9 @@ Future<void> init() async {
   sl.registerLazySingleton<LoginWithEmailUseCase>(
     () => LoginWithEmailUseCase(sl<AuthRepository>()),
   );
-
+  sl.registerLazySingleton<GetHomeRestaurantsUseCase>(
+    () => GetHomeRestaurantsUseCase(sl<RestaurantRepository>()),
+  );
   sl.registerLazySingleton<LoginWithGoogleUseCase>(
     () => LoginWithGoogleUseCase(sl<AuthRepository>()),
   );
@@ -144,12 +167,13 @@ Future<void> init() async {
   );
 
   sl.registerFactory<SplashBloc>(
-    ()=>SplashBloc(authStateChangesUseCase: sl<AuthStateChangesUseCase>())
-    );
+    () => SplashBloc(authStateChangesUseCase: sl<AuthStateChangesUseCase>()),
+  );
   sl.registerFactory<UserProfileBloc>(
     () => UserProfileBloc(
       sl<CreateUserProfileUseCase>(),
       // add others if needed (update, get, etc.)
     ),
   );
+  sl.registerFactory<HomeHeaderBloc>(() => HomeHeaderBloc());
 }
