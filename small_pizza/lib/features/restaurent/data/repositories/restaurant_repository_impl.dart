@@ -13,13 +13,13 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
   @override
   Future<List<RestaurantEntity>> getHomeRestaurants() async {
     final models = await dataSource.getAllRestaurants();
+
     return models.map(RestaurantMapper.toEntity).toList();
   }
 
- @override
+  @override
   Future<List<RestaurantEntity>> getPopularRestaurants() async {
     final models = await dataSource.getAllRestaurants();
-
     return models
         .where((m) => m.isPopular)
         .map(RestaurantMapper.toEntity)
