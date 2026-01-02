@@ -11,6 +11,7 @@ import 'package:small_pizza/features/auth/presentation/pages/regiater_pages.dart
 import 'package:small_pizza/features/auth/presentation/pages/splash_pages.dart';
 import 'package:small_pizza/features/home/presentation/pages/home_view.dart';
 import 'package:small_pizza/features/onboarding/presentation/pages/onboarding_pages.dart';
+import 'package:small_pizza/features/restaurent/presentation/pages/popular_restaurants_view.dart';
 import 'package:small_pizza/features/shell/presentation/pages/app_shell_page.dart';
 // 🔹 TEMP pages (we’ll replace with real ones later)
 // class SplashPage extends StatelessWidget {
@@ -29,8 +30,6 @@ import 'package:small_pizza/features/shell/presentation/pages/app_shell_page.dar
 //   }
 // }
 
-
-
 class MenuPage extends StatelessWidget {
   const MenuPage({super.key});
   @override
@@ -47,7 +46,6 @@ class OffersPage extends StatelessWidget {
   }
 }
 
-
 class MorePage extends StatelessWidget {
   const MorePage({super.key});
   @override
@@ -63,6 +61,7 @@ class ProfilePage extends StatelessWidget {
     return const Scaffold(body: Center(child: Text("Offers")));
   }
 }
+
 class CheckoutPage extends StatelessWidget {
   const CheckoutPage({super.key});
   @override
@@ -113,76 +112,91 @@ class AppRoutes {
           return AppShellPage(navigationShell: navigationShell);
         },
         branches: <StatefulShellBranch>[
-
-        
-// Branch 1 → Menu (left side)
-        StatefulShellBranch(
-          navigatorKey: GlobalKey<NavigatorState>(debugLabel: 'menuNavKey'),
-          routes: [
-            GoRoute(
-              path: '/menu',
-              pageBuilder: (context, state) => const NoTransitionPage(
-                child: MenuPage(), // ← replace later
+          // Branch 1 → Menu (left side)
+          StatefulShellBranch(
+            navigatorKey: GlobalKey<NavigatorState>(debugLabel: 'menuNavKey'),
+            routes: [
+              GoRoute(
+                path: '/menu',
+                pageBuilder: (context, state) => const NoTransitionPage(
+                  child: MenuPage(), // ← replace later
+                ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
 
-        // Branch 2 → Offers
-        StatefulShellBranch(
-          navigatorKey: GlobalKey<NavigatorState>(debugLabel: 'offersNavKey'),
-          routes: [
-            GoRoute(
-              path: '/offers',
-              pageBuilder: (context, state) => const NoTransitionPage(
-                child: OffersPage(), // ← replace later
+          // Branch 2 → Offers
+          StatefulShellBranch(
+            navigatorKey: GlobalKey<NavigatorState>(debugLabel: 'offersNavKey'),
+            routes: [
+              GoRoute(
+                path: '/offers',
+                pageBuilder: (context, state) => const NoTransitionPage(
+                  child: OffersPage(), // ← replace later
+                ),
               ),
-            ),
-          ],
-        ),
-    // Menu
+            ],
+          ),
+          // Menu
           StatefulShellBranch(
             navigatorKey: GlobalKey<NavigatorState>(debugLabel: 'homeNavKey'),
             initialLocation: '/home',
             routes: [
               GoRoute(
-              path: '/home',
-              pageBuilder: (context, state) => const NoTransitionPage(
-                child: HomeView(),
+                path: '/home',
+                pageBuilder: (context, state) =>
+                    const NoTransitionPage(child: HomeView()),
               ),
-            ),
-            // You can later add nested routes here, e.g. /home/details/:id
-          ],
-          ),
-        // Branch 3 → Profile
-        StatefulShellBranch(
-          navigatorKey: GlobalKey<NavigatorState>(debugLabel: 'profileNavKey'),
-          routes: [
-            GoRoute(
-              path: '/profile',
-              pageBuilder: (context, state) => const NoTransitionPage(
-                child: ProfilePage(), // ← replace later
-              ),
-            ),
-          ],
-        ),
+              // You can later add nested routes here, e.g. /home/details/:id
+              // Nested route under /home
+              GoRoute(
+                path:
+                    '/home/popular-restaurants', // → full path becomes /home/popular-restaurants
+                builder: (_,_) => const PopularRestaurantsView(),
+                // OR use pageBuilder if you want custom transitions
+                // pageBuilder: (context, state) => MaterialPage(
+                //   child: PopularRestaurantsFullScreen(),
+                // ),
 
-        // Branch 4 → More
-        StatefulShellBranch(
-          navigatorKey: GlobalKey<NavigatorState>(debugLabel: 'moreNavKey'),
-          routes: [
-            GoRoute(
-              path: '/more',
-              pageBuilder: (context, state) => const NoTransitionPage(
-                child: MorePage(), // ← replace later
+                // You can add more nested routes later, examples:
+                // GoRoute(
+                //   path: 'restaurant/:id',
+                //   builder: (context, state) => RestaurantDetailScreen(
+                //     id: state.pathParameters['id']!,
+                //   ),
+                // ),
               ),
+            ],
+          ),
+          // Branch 3 → Profile
+          StatefulShellBranch(
+            navigatorKey: GlobalKey<NavigatorState>(
+              debugLabel: 'profileNavKey',
             ),
-          ],
-        ),
-      ],
-    ),
-          
-       
+            routes: [
+              GoRoute(
+                path: '/profile',
+                pageBuilder: (context, state) => const NoTransitionPage(
+                  child: ProfilePage(), // ← replace later
+                ),
+              ),
+            ],
+          ),
+
+          // Branch 4 → More
+          StatefulShellBranch(
+            navigatorKey: GlobalKey<NavigatorState>(debugLabel: 'moreNavKey'),
+            routes: [
+              GoRoute(
+                path: '/more',
+                pageBuilder: (context, state) => const NoTransitionPage(
+                  child: MorePage(), // ← replace later
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
 
       /// 🏠 App Shell
       // ShellRoute(

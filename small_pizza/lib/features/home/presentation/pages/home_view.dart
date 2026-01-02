@@ -9,11 +9,14 @@ import 'package:small_pizza/features/home/presentation/bloc/popular_food/popular
 import 'package:small_pizza/features/home/presentation/bloc/popular_food/popular_foods_event.dart';
 import 'package:small_pizza/features/home/presentation/bloc/popular_restaurants/popular_restaurants_bloc.dart';
 import 'package:small_pizza/features/home/presentation/bloc/popular_restaurants/popular_restaurants_event.dart';
+import 'package:small_pizza/features/home/presentation/bloc/recent_items/recent_food_bloc.dart';
+import 'package:small_pizza/features/home/presentation/bloc/recent_items/recent_food_event.dart';
 import 'package:small_pizza/features/home/presentation/bloc/search_bloc/search_bloc.dart';
 import 'package:small_pizza/features/home/presentation/widgets/home_header.dart';
 import 'package:small_pizza/features/home/presentation/widgets/home_search_bar.dart';
 import 'package:small_pizza/features/home/presentation/widgets/popular_food/most_popular_horizontal_list.dart';
 import 'package:small_pizza/features/home/presentation/widgets/popular_restaurants/popular_restaurants_section.dart';
+import 'package:small_pizza/features/home/presentation/widgets/recent_items/recent_items_section.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -44,6 +47,10 @@ class _HomeViewState extends State<HomeView> {
           BlocProvider(
             create: (_) => sl<PopularFoodsBloc>()..add(LoadPopularFoods()),
           ),
+
+          BlocProvider(
+            create: (_) => sl<RecentFoodsBloc>()..add(LoadRecentFoods()),
+          ),
         ],
         child: BlocListener<HomeHeaderBloc, HomeHeaderState>(
           listenWhen: (previous, current) => current.openLocationSheet == true,
@@ -63,15 +70,10 @@ class _HomeViewState extends State<HomeView> {
 
               SliverToBoxAdapter(child: PopularRestaurantsSection()),
 
-              const SliverToBoxAdapter(
-                child: MostPopularSection(),
-              ),
-              const SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 300,
-                  child: Center(child: Text('Recent Items')),
-                ),
-              ),
+              const SliverToBoxAdapter(child: MostPopularSection()),
+              const SliverToBoxAdapter(child: RecentItemsSection()),
+
+              const SliverToBoxAdapter(child: SizedBox(height: 120)),
             ],
           ),
         ),
@@ -112,7 +114,7 @@ class _HomeViewState extends State<HomeView> {
               ListTile(
                 leading: Icon(
                   Icons.my_location_rounded,
-                  color: AppTheme.primaryColor,
+                  color: theme.primaryColor,
                 ),
                 title: const Text('Use current location'),
                 subtitle: Text(
@@ -127,10 +129,7 @@ class _HomeViewState extends State<HomeView> {
                 },
               ),
               ListTile(
-                leading: const Icon(
-                  Icons.home_rounded,
-                  color: AppTheme.primaryColor,
-                ),
+                leading: Icon(Icons.home_rounded, color: theme.primaryColor),
                 title: const Text('Home'),
                 subtitle: const Text('Koramangala / MG Road / ...'),
                 onTap: () {

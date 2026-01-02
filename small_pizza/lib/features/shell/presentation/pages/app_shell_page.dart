@@ -14,7 +14,7 @@ class AppShellPage extends StatelessWidget {
     final isHomeActive = navigationShell.currentIndex == 2;
 
     return Scaffold(
-      body: Padding(padding: const EdgeInsets.all(4.0), child: navigationShell),
+      body: navigationShell,
       extendBody: true,
       extendBodyBehindAppBar: true, // ← optional: cleaner look on scroll
       backgroundColor: Colors.grey.shade50, // ← light background recommended

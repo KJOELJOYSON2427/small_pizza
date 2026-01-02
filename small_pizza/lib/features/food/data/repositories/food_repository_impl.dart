@@ -29,8 +29,11 @@ class FoodRepositoryImpl implements FoodRepository {
   }
   
   @override
-  Future<List<FoodEntity>> getRecentFoods() {
-    // TODO: implement getRecentFoods
-    throw UnimplementedError();
+  Future<List<FoodEntity>> getRecentFoods() async{
+    final models = await dataSource.getAll();
+    return models
+        
+        .map(FoodMapper.toEntity)
+        .toList();
   }
 }

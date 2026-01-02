@@ -23,4 +23,10 @@ abstract class RestaurantRepository {
 
   /// Full details page
   Future<RestaurantDetailsEntity> getRestaurantDetails(String restaurantId);
+
+
+   Future<List<RestaurantEntity>> getPopularRestaurantswithPage({
+    int page,
+    int limit,
+  });
 }
