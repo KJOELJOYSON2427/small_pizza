@@ -2,10 +2,10 @@ import 'package:small_pizza/features/food/domain/entities/food_item_entity.dart'
 
 import '../repositories/food_repository.dart';
 
-class GetFoodsByRestaurant {
+class GetFoodsByRestaurantUseCase {
   final FoodRepository repository;
 
-  GetFoodsByRestaurant(this.repository);
+  GetFoodsByRestaurantUseCase(this.repository);
 
 
   Future<List<FoodEntity>> call(String restaurantId) {

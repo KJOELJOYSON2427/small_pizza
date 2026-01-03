@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:small_pizza/features/home/presentation/widgets/popular_restaurants/popular_restaurants_card.dart';
 import '../bloc/popular_restaurants/popular_restaurants_bloc.dart';
 import '../bloc/popular_restaurants/popular_restaurants_state.dart';
@@ -56,7 +57,7 @@ class _PopularRestaurantsListState extends State<PopularRestaurantsList> {
         //      },
         // );
 
-       return  ListView.separated(
+        return ListView.separated(
           controller: _controller,
           padding: const EdgeInsets.fromLTRB(
             16,
@@ -75,7 +76,22 @@ class _PopularRestaurantsListState extends State<PopularRestaurantsList> {
               );
             }
 
-            return PopularRestaurantCard(restaurant: state.restaurants[index]);
+            return PopularRestaurantCard(
+              restaurant: state.restaurants[index],
+
+              onTap: () {
+                if (!context.mounted) return;
+             
+                final id = state.restaurants[index].id;
+                print(id);
+                // optional: small delay / loading / animation
+                // await Future.delayed(Duration(milliseconds: 80));
+
+                if (!context.mounted) return; // check again after await
+
+                context.go('/home/popular-restaurants/$id');
+              },
+            );
           },
         );
       },

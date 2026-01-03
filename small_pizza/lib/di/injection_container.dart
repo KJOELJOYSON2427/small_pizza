@@ -36,6 +36,7 @@ import 'package:small_pizza/features/food/data/datasorces/food_mock_datasource.d
 import 'package:small_pizza/features/food/data/datasorces/food_mock_datasource_impl.dart';
 import 'package:small_pizza/features/food/data/repositories/food_repository_impl.dart';
 import 'package:small_pizza/features/food/domain/repositories/food_repository.dart';
+import 'package:small_pizza/features/food/domain/usecases/get_foods_by_restaurant.dart';
 import 'package:small_pizza/features/food/domain/usecases/get_popular_foods.dart';
 import 'package:small_pizza/features/food/domain/usecases/get_recent_foods.dart';
 import 'package:small_pizza/features/home/presentation/bloc/home_header/home_header_bloc.dart';
@@ -43,14 +44,17 @@ import 'package:small_pizza/features/home/presentation/bloc/popular_food/popular
 import 'package:small_pizza/features/home/presentation/bloc/popular_restaurants/popular_restaurants_bloc.dart';
 import 'package:small_pizza/features/home/presentation/bloc/recent_items/recent_food_bloc.dart';
 import 'package:small_pizza/features/home/presentation/bloc/search_bloc/search_bloc.dart';
-import 'package:small_pizza/features/restaurent/data/datasorces/restaurant_mock_datasource.dart';
-import 'package:small_pizza/features/restaurent/data/datasorces/restaurant_mock_datasource_impl.dart';
+import 'package:small_pizza/features/restaurent/data/datasources/restaurant_mock_datasource.dart';
+import 'package:small_pizza/features/restaurent/data/datasources/restaurant_mock_datasource_impl.dart';
 import 'package:small_pizza/features/restaurent/data/repositories/restaurant_repository_impl.dart';
 import 'package:small_pizza/features/restaurent/domain/repositories/restaurant_repository.dart';
 import 'package:small_pizza/features/restaurent/domain/usecases/get_home_restaurants_usecase.dart';
 import 'package:small_pizza/features/restaurent/domain/usecases/get_popular_restaurants_usecase.dart';
 import 'package:small_pizza/features/restaurent/domain/usecases/get_popular_restaurants_with_page.dart';
+import 'package:small_pizza/features/restaurent/domain/usecases/get_restaurant_details_usecase.dart';
+import 'package:small_pizza/features/restaurent/presentation/bloc/popular_foods_from_restaurant/popular_from_restaurant_bloc.dart';
 import 'package:small_pizza/features/restaurent/presentation/bloc/popular_restaurants/popular_restaurants_bloc.dart';
+import 'package:small_pizza/features/restaurent/presentation/bloc/restaurant_details/restaurant_details_bloc.dart';
 
 final sl = GetIt.instance;
 Future<void> init() async {
@@ -165,14 +169,20 @@ Future<void> init() async {
     () => GetPopularFoodsUseCase(sl<FoodRepository>()),
   );
 
-   sl.registerLazySingleton<GetRecentFoodsUseCase>(
+  sl.registerLazySingleton<GetRecentFoodsUseCase>(
     () => GetRecentFoodsUseCase(sl<FoodRepository>()),
   );
-  
-  sl.registerLazySingleton<GetPopularRestaurantsWithPageUseCase>(
-  () => GetPopularRestaurantsWithPageUseCase(sl<RestaurantRepository>()),
-);
 
+  sl.registerLazySingleton<GetPopularRestaurantsWithPageUseCase>(
+    () => GetPopularRestaurantsWithPageUseCase(sl<RestaurantRepository>()),
+  );
+  sl.registerLazySingleton<GetRestaurantDetailsUseCase>(
+    () => GetRestaurantDetailsUseCase(sl<RestaurantRepository>()),
+  );
+
+  sl.registerLazySingleton<GetFoodsByRestaurantUseCase>(
+    () => GetFoodsByRestaurantUseCase(sl<FoodRepository>()),
+  );
 
   // ── 5. Blocs (last!) ──────────────────────────────────────────
   sl.registerFactory<LoginBloc>(
@@ -202,17 +212,33 @@ Future<void> init() async {
     ),
   );
   sl.registerFactory<HomeHeaderBloc>(() => HomeHeaderBloc());
-  
 
-    sl.registerFactory<SearchBloc>(() => SearchBloc());
+  sl.registerFactory<SearchBloc>(() => SearchBloc());
 
-     sl.registerFactory<PopularRestaurantsBloc>(() => PopularRestaurantsBloc(sl<GetPopularRestaurantsUseCase>()));
+  sl.registerFactory<PopularRestaurantsBloc>(
+    () => PopularRestaurantsBloc(sl<GetPopularRestaurantsUseCase>()),
+  );
 
+  sl.registerFactory<PopularFoodsBloc>(
+    () => PopularFoodsBloc(sl<GetPopularFoodsUseCase>()),
+  );
 
-    sl.registerFactory<PopularFoodsBloc>(() => PopularFoodsBloc(sl<GetPopularFoodsUseCase>()));
-   
-    sl.registerFactory<RecentFoodsBloc>(() => RecentFoodsBloc(sl<GetRecentFoodsUseCase>()));
-   
-      sl.registerFactory<PopularRestaurantsWithPageBloc>(() => PopularRestaurantsWithPageBloc(sl<GetPopularRestaurantsWithPageUseCase>()));
+  sl.registerFactory<RecentFoodsBloc>(
+    () => RecentFoodsBloc(sl<GetRecentFoodsUseCase>()),
+  );
 
+  sl.registerFactory<PopularRestaurantsWithPageBloc>(
+    () => PopularRestaurantsWithPageBloc(
+      sl<GetPopularRestaurantsWithPageUseCase>(),
+    ),
+  );
+
+  sl.registerFactory<RestaurantDetailsBloc>(
+    () => RestaurantDetailsBloc(sl<GetRestaurantDetailsUseCase>()),
+  );
+  sl.registerFactory<PopularFromRestaurantBloc>(
+    () => PopularFromRestaurantBloc(
+      sl<GetFoodsByRestaurantUseCase>()
+    ),
+  );
 }

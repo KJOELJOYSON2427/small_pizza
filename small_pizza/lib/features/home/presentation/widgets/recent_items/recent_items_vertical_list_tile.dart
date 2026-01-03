@@ -40,7 +40,7 @@ class RecentFoodTile extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                '${food.restaurantName} • ${food.cuisine.name}',
+                '${food.mealCategory} • ${food.cuisine.name}',
                 style: const TextStyle(
                   fontSize: 12,
                   color: Colors.grey,

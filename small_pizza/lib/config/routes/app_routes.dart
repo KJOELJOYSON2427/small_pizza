@@ -12,6 +12,7 @@ import 'package:small_pizza/features/auth/presentation/pages/splash_pages.dart';
 import 'package:small_pizza/features/home/presentation/pages/home_view.dart';
 import 'package:small_pizza/features/onboarding/presentation/pages/onboarding_pages.dart';
 import 'package:small_pizza/features/restaurent/presentation/pages/popular_restaurants_view.dart';
+import 'package:small_pizza/features/restaurent/presentation/pages/restaurant_details_page.dart';
 import 'package:small_pizza/features/shell/presentation/pages/app_shell_page.dart';
 // 🔹 TEMP pages (we’ll replace with real ones later)
 // class SplashPage extends StatelessWidget {
@@ -157,15 +158,14 @@ class AppRoutes {
                 // pageBuilder: (context, state) => MaterialPage(
                 //   child: PopularRestaurantsFullScreen(),
                 // ),
-
-                // You can add more nested routes later, examples:
-                // GoRoute(
-                //   path: 'restaurant/:id',
-                //   builder: (context, state) => RestaurantDetailScreen(
-                //     id: state.pathParameters['id']!,
-                //   ),
-                // ),
               ),
+                // You can add more nested routes later, examples:
+                GoRoute(
+                  path: '/home/popular-restaurants/:id',
+                  builder: (context, state) => RestaurantDetailsPage(
+                    restaurantId: state.pathParameters['id']!,
+                  ),
+                ),
             ],
           ),
           // Branch 3 → Profile

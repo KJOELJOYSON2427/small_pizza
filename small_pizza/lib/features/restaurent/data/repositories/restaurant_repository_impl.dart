@@ -1,4 +1,5 @@
-import 'package:small_pizza/features/restaurent/data/datasorces/restaurant_mock_datasource.dart';
+import 'package:small_pizza/features/restaurent/data/datasources/restaurant_mock_datasource.dart';
+import 'package:small_pizza/features/restaurent/data/mappers/restaurant_details_mapper.dart';
 import 'package:small_pizza/features/restaurent/data/mappers/restaurant_mapper.dart';
 import 'package:small_pizza/features/restaurent/data/models/restaurant_model.dart';
 import 'package:small_pizza/features/restaurent/domain/entities/restaurant_details_entity.dart';
@@ -37,11 +38,25 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
         .toList();
   }
 
-  @override
-  Future<RestaurantDetailsEntity> getRestaurantDetails(String restaurantId) {
-    // TODO: implement getRestaurantDetails
-    throw UnimplementedError();
+ @override
+Future<RestaurantDetailsEntity> getRestaurantDetails(String restaurantId) async {
+  print('🔍 Fetching restaurant details for ID: $restaurantId');
+  
+  try {
+    final model = await dataSource.getRestaurantDetails(restaurantId);
+    
+    print('✅ Found restaurant: ${model.restaurant.name ?? "Unnamed"} (ID: $restaurantId)');
+    print('   📍 Address: ${model.location.address ?? "N/A"}');
+    print('   ⭐ Rating: ${model.deliveryInfo.deliveryFee ?? 0.0} (${model.deliveryInfo.maxDeliveryTime ?? 0} reviews)');
+
+    
+    return RestaurantDetailsMapper.toEntity(model);
+  } catch (e, stackTrace) {
+    print('❌ Error fetching restaurant $restaurantId: $e');
+    print('   Stack trace: $stackTrace');
+    rethrow; // don't forget to rethrow for error handling
   }
+}
 
   @override
   Future<List<RestaurantEntity>> getRestaurantsByCuisine(
