@@ -22,46 +22,39 @@ class PopularFromRestaurantSection extends StatelessWidget {
     return BlocBuilder<PopularFromRestaurantBloc, PopularFromRestaurantState>(
       builder: (context, state) {
         if (state.isLoading) {
-          return const SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: CircularProgressIndicator(),
-            ),
+          return Padding(
+            padding: EdgeInsets.all(16),
+            child: CircularProgressIndicator(),
           );
         }
     
         if (state.foods.isEmpty) {
-          return const SliverToBoxAdapter(child: SizedBox.shrink());
+          return SizedBox.shrink();
         }
     
-        return SliverToBoxAdapter(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SectionHeader(
-                onViewAll: () {
-                  // navigation only
-                  context.go(
-                    '/menu',
-                    extra: restaurantId,
-                  );
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SectionHeader(
+              onViewAll: () {
+                // navigation only
+               context.go('/menu/$restaurantId');
+              },
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              height: 210,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: state.foods.length,
+                separatorBuilder: (_, __) => const SizedBox(width: 12),
+                itemBuilder: (_, index) {
+                  return FoodPreviewCard(food: state.foods[index]);
                 },
               ),
-              const SizedBox(height: 12),
-              SizedBox(
-                height: 210,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: state.foods.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 12),
-                  itemBuilder: (_, index) {
-                    return FoodPreviewCard(food: state.foods[index]);
-                  },
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         );
       },
     );

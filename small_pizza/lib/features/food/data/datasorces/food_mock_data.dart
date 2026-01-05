@@ -13,7 +13,7 @@ class FoodMockData {
       mealCategory: 'dinner',
       foodType: 'veg',
 
-      restaurantId: 'r1',
+      restaurantId: '1',
 
       isAvailable: true,
 
@@ -37,10 +37,10 @@ class FoodMockData {
       price: 6.49,
 
       cuisine: 'sriLankan',
-      mealCategory: 'dinner',
+      mealCategory: 'beverages',
       foodType: 'nonVeg',
 
-      restaurantId: 'r2',
+      restaurantId: '1',
 
       isAvailable: true,
 
@@ -64,10 +64,10 @@ class FoodMockData {
       price: 3.99,
 
       cuisine: 'indian',
-      mealCategory: 'breakfast',
+      mealCategory: 'desserts',
       foodType: 'veg',
 
-      restaurantId: 'r3',
+      restaurantId: '1',
 
       isAvailable: true,
 
@@ -91,10 +91,10 @@ class FoodMockData {
       price: 4.49,
 
       cuisine: 'american',
-      mealCategory: 'dessert',
+      mealCategory: 'snacks',
       foodType: 'veg',
 
-      restaurantId: 'r1',
+      restaurantId: '1',
 
       isAvailable: false,
 

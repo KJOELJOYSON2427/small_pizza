@@ -36,14 +36,18 @@ import 'package:small_pizza/features/food/data/datasorces/food_mock_datasource.d
 import 'package:small_pizza/features/food/data/datasorces/food_mock_datasource_impl.dart';
 import 'package:small_pizza/features/food/data/repositories/food_repository_impl.dart';
 import 'package:small_pizza/features/food/domain/repositories/food_repository.dart';
+import 'package:small_pizza/features/food/domain/usecases/get_foods_by_category_usecase.dart';
 import 'package:small_pizza/features/food/domain/usecases/get_foods_by_restaurant.dart';
 import 'package:small_pizza/features/food/domain/usecases/get_popular_foods.dart';
 import 'package:small_pizza/features/food/domain/usecases/get_recent_foods.dart';
+import 'package:small_pizza/features/food/presentation/cubit/food_list_cubit.dart';
 import 'package:small_pizza/features/home/presentation/bloc/home_header/home_header_bloc.dart';
 import 'package:small_pizza/features/home/presentation/bloc/popular_food/popular_foods_bloc.dart';
 import 'package:small_pizza/features/home/presentation/bloc/popular_restaurants/popular_restaurants_bloc.dart';
 import 'package:small_pizza/features/home/presentation/bloc/recent_items/recent_food_bloc.dart';
 import 'package:small_pizza/features/home/presentation/bloc/search_bloc/search_bloc.dart';
+import 'package:small_pizza/features/menu/domain/usecases/get_available_meal_categories_use_case.dart';
+import 'package:small_pizza/features/menu/presentation/bloc/menu_bloc.dart';
 import 'package:small_pizza/features/restaurent/data/datasources/restaurant_mock_datasource.dart';
 import 'package:small_pizza/features/restaurent/data/datasources/restaurant_mock_datasource_impl.dart';
 import 'package:small_pizza/features/restaurent/data/repositories/restaurant_repository_impl.dart';
@@ -184,6 +188,14 @@ Future<void> init() async {
     () => GetFoodsByRestaurantUseCase(sl<FoodRepository>()),
   );
 
+  sl.registerLazySingleton<GetAvailableMealCategoriesUseCase>(
+    () => GetAvailableMealCategoriesUseCase(sl<FoodRepository>()),
+  );
+
+  sl.registerLazySingleton<GetFoodsByRestaurantAndCategoryUseCase>(
+    () => GetFoodsByRestaurantAndCategoryUseCase(sl<FoodRepository>()),
+  );
+
   // ── 5. Blocs (last!) ──────────────────────────────────────────
   sl.registerFactory<LoginBloc>(
     () => LoginBloc(
@@ -237,8 +249,14 @@ Future<void> init() async {
     () => RestaurantDetailsBloc(sl<GetRestaurantDetailsUseCase>()),
   );
   sl.registerFactory<PopularFromRestaurantBloc>(
-    () => PopularFromRestaurantBloc(
-      sl<GetFoodsByRestaurantUseCase>()
-    ),
+    () => PopularFromRestaurantBloc(sl<GetFoodsByRestaurantUseCase>()),
+  );
+
+  sl.registerFactory<MenuBloc>(
+    () => MenuBloc(sl<GetAvailableMealCategoriesUseCase>()),
+  );
+
+  sl.registerFactory<FoodListCubit>(
+    () => FoodListCubit(sl<GetFoodsByRestaurantAndCategoryUseCase>()),
   );
 }

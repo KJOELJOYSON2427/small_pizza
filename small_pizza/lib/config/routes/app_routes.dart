@@ -9,7 +9,13 @@ import 'package:small_pizza/features/auth/presentation/bloc/register/register_bl
 import 'package:small_pizza/features/auth/presentation/pages/login_page.dart';
 import 'package:small_pizza/features/auth/presentation/pages/regiater_pages.dart';
 import 'package:small_pizza/features/auth/presentation/pages/splash_pages.dart';
+import 'package:small_pizza/features/food/domain/enums/menu_category.dart';
+import 'package:small_pizza/features/food/presentation/cubit/food_list_cubit.dart';
+import 'package:small_pizza/features/food/presentation/pages/food_list_page.dart';
 import 'package:small_pizza/features/home/presentation/pages/home_view.dart';
+import 'package:small_pizza/features/menu/presentation/bloc/menu_bloc.dart';
+import 'package:small_pizza/features/menu/presentation/bloc/menu_event.dart';
+import 'package:small_pizza/features/menu/presentation/pages/menu_page.dart';
 import 'package:small_pizza/features/onboarding/presentation/pages/onboarding_pages.dart';
 import 'package:small_pizza/features/restaurent/presentation/pages/popular_restaurants_view.dart';
 import 'package:small_pizza/features/restaurent/presentation/pages/restaurant_details_page.dart';
@@ -23,19 +29,11 @@ import 'package:small_pizza/features/shell/presentation/pages/app_shell_page.dar
 //   }
 // }
 
-// class RegisterPage extends StatelessWidget {
-//   const RegisterPage({super.key});
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Scaffold(body: Center(child: Text("Register")));
-//   }
-// }
-
-class MenuPage extends StatelessWidget {
-  const MenuPage({super.key});
+class MenuView extends StatelessWidget {
+  const MenuView({super.key});
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: Text("Menu Detail")));
+    return const Scaffold(body: Center(child: Text("Register")));
   }
 }
 
@@ -116,12 +114,62 @@ class AppRoutes {
           // Branch 1 → Menu (left side)
           StatefulShellBranch(
             navigatorKey: GlobalKey<NavigatorState>(debugLabel: 'menuNavKey'),
+            initialLocation: '/menu',
             routes: [
               GoRoute(
                 path: '/menu',
-                pageBuilder: (context, state) => const NoTransitionPage(
-                  child: MenuPage(), // ← replace later
-                ),
+                pageBuilder: (context, state) =>
+                    const NoTransitionPage(child: MenuView()),
+              ),
+              GoRoute(
+                path:
+                    '/menu/:restaurantId', // ← :restaurantId is dynamic parameter
+                builder: (context, state) {
+                  // Get restaurantId from path
+                  final restaurantId = state.pathParameters['restaurantId']!;
+                  print(restaurantId);
+                  print("csme dhoeh");
+                  return BlocProvider<MenuBloc>(
+                    create: (_) =>
+                        sl<MenuBloc>()..add(LoadMenuCategories(restaurantId)),
+                    child: MenuPage(restaurantId: restaurantId),
+                  );
+                },
+              ),
+
+              GoRoute(
+                path: '/menu/items/:category',
+                pageBuilder: (context, state) {
+                  // Extract extra data (passed from previous screen)
+                  final params = state.extra as Map<String, dynamic>? ?? {};
+
+                  final restaurantId = params['restaurantId'] as String?;
+                  final category = params['category'] as MealCategory?;
+
+                  // Safety check - you can also use proper error handling page
+                  if (restaurantId == null || category == null) {
+                    return const MaterialPage(
+                      child: Scaffold(
+                        body: Center(child: Text('Invalid parameters')),
+                      ),
+                    );
+                  }
+                  return MaterialPage(
+                    child: BlocProvider<FoodListCubit>(
+                      // Use service locator to get fresh instance
+                      create: (_) =>
+                          sl<FoodListCubit>() // ← recommended way
+                            ..loadFoods(
+                              restaurantId: restaurantId,
+                              category: category,
+                            ),
+                      child: FoodListPage(
+                        restaurantId: restaurantId,
+                        category: category,
+                      ),
+                    ),
+                  );
+                },
               ),
             ],
           ),
@@ -153,19 +201,19 @@ class AppRoutes {
               GoRoute(
                 path:
                     '/home/popular-restaurants', // → full path becomes /home/popular-restaurants
-                builder: (_,_) => const PopularRestaurantsView(),
+                builder: (_, _) => const PopularRestaurantsView(),
                 // OR use pageBuilder if you want custom transitions
                 // pageBuilder: (context, state) => MaterialPage(
                 //   child: PopularRestaurantsFullScreen(),
                 // ),
               ),
-                // You can add more nested routes later, examples:
-                GoRoute(
-                  path: '/home/popular-restaurants/:id',
-                  builder: (context, state) => RestaurantDetailsPage(
-                    restaurantId: state.pathParameters['id']!,
-                  ),
+              // You can add more nested routes later, examples:
+              GoRoute(
+                path: '/home/popular-restaurants/:id',
+                builder: (context, state) => RestaurantDetailsPage(
+                  restaurantId: state.pathParameters['id']!,
                 ),
+              ),
             ],
           ),
           // Branch 3 → Profile

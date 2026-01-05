@@ -7,8 +7,8 @@ class GetFoodsByRestaurantUseCase {
 
   GetFoodsByRestaurantUseCase(this.repository);
 
-
   Future<List<FoodEntity>> call(String restaurantId) {
+    print(restaurantId);
     return repository.getFoodsByRestaurant(restaurantId);
   }
 }
